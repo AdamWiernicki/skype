@@ -20,7 +20,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // install middleware
   swaggerExpress.register(app);
 
-  var port = process.env.PORT || 10010;
+  var port = process.env.PORT || 3000;
   app.listen(port);
 });
 
@@ -31,43 +31,32 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 // }
 // app.get('/', hello);
 
-funcrtion basePath(req){
-	var externalPathValue = req.header("hybris-external-path");
-	if(externalPathValue){
-		// remove trailing slash, if any
-		return externalPathValue.replace(/\/$/,"");
-	} else {
-		return "";
-	}
-}
-app.get('/', function(req,res){
-	res.redirect(basePath(req) + "/spotify/");
-});
 
-if(process.env.BASIC_AUTH_PASS)
-	app.use(basicAuth(function(user,pass){
-		return process.env.BASIC_AUTH_PASS === pass || process.env.BASIC_AUTH_PASS2 === pass;
-	}));
+
+// if(process.env.BASIC_AUTH_PASS)
+	// app.use(basicAuth(function(user,pass){
+		// return process.env.BASIC_AUTH_PASS === pass || process.env.BASIC_AUTH_PASS2 === pass;
+	// }));
 
 app.get('/vcap', function(req,res){res.send(process.env.VCAP_APPLICATION)});
 
 	
 var playlist = [];
 
-app.route(':userId/playlist')
+app.route('playlist') //:userId/playlist')
 	.get(function(req,res){ // get all playlist names&public
 		if(playlist.length==0)
 			res.status(404).send('There are no playlist created yet.');
 		// var x, y=1;
 		// var list = "Nazwa, publiczna: \n";
 		res.send(playlist.values().filter(function(playlist){
-			return playlist.userId === userId
+			//return playlist.userId === userId
 		}));
 	})
 	.post(function(req,res){ // create new playlist
 		var id = uuid.v4();
 		var list = req.body;
-		list.userId = req.params.userId;
+		//list.userId = req.params.userId;
 		list.id = id;
 		list.name = req.query.name;
 		list.public = req.query.public; //yes/no
@@ -83,7 +72,7 @@ function findPlaylist(req,res,next){
 			res.sendStatus(404);
 	var id = req.params.id;
 	var list = playlist.get(id);
-	if(!playlist || playlist.userId !== req.params.userId){
+	if(!playlist){ // || playlist.userId !== req.params.userId){
 		return res.status(404).send({message: "Playlisty nie znaleziono."});
 	}
 	req.playlist = list;
@@ -98,7 +87,7 @@ function findTracks(ids){
 	});
 }
 	
-app.route(':userId/playlist/:id')
+app.route('playlist/:id') //:userId/playlist/:id')
 	.get(findPlaylist, function(req,res){ // show playlist name&tracks
 		// var z = req.params.id - 1;
 		// var x, list = "";
