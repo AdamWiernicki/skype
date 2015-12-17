@@ -31,7 +31,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 // app.get('/', hello);
 
 
-
 // if(process.env.BASIC_AUTH_PASS)
 	// app.use(basicAuth(function(user,pass){
 		// return process.env.BASIC_AUTH_PASS === pass || process.env.BASIC_AUTH_PASS2 === pass;
@@ -42,15 +41,16 @@ app.get('/vcap', function(req,res){res.send(process.env.VCAP_APPLICATION)});
 	
 var playlist = [];
 
-app.route('playlist') //:userId/playlist')
+app.route('/playlist') //:userId/playlist')
 	.get(function(req,res){ // get all playlist names&public
-		if(playlist.length==0)
-			res.status(404).send('There are no playlist created yet.');
+		if(playlist.length==0){
+			return res.status(404).send('There are no playlist created yet.');
+		}
 		// var x, y=1;
 		// var list = "Nazwa, publiczna: \n";
-		res.send(playlist.values().filter(function(playlist){
+		res.send(playlist);//.values().filter(function(playlist){
 			//return playlist.userId === userId
-		}));
+		//}));
 	})
 	.post(function(req,res){ // create new playlist
 		var id = uuid.v4();
@@ -65,10 +65,11 @@ app.route('playlist') //:userId/playlist')
 	
 
 function findPlaylist(req,res,next){
-	if(req.params.id <= 0)
-			res.status(404).send('Numery playlist zaczynają się od \'1\'');
-		else if(req.params.id > playlist.length || isNaN(req.params.id))
-			res.sendStatus(404);
+	if(req.params.id <= 0){
+		return res.status(404).send('Numery playlist zaczynają się od \'1\'');
+	}else if(req.params.id > playlist.length || isNaN(req.params.id)){
+		return res.sendStatus(404);
+	}
 	var id = req.params.id;
 	var list = playlist.get(id);
 	if(!playlist){ // || playlist.userId !== req.params.userId){
@@ -86,7 +87,7 @@ function findTracks(ids){
 	});
 }
 	
-app.route('playlist/:id') //:userId/playlist/:id')
+app.route('/playlist/:id') //:userId/playlist/:id')
 	.get(findPlaylist, function(req,res){ // show playlist name&tracks
 		// var z = req.params.id - 1;
 		// var x, list = "";
@@ -103,13 +104,13 @@ app.route('playlist/:id') //:userId/playlist/:id')
 			// playlist[i].push(req.query.two);
 		// if(req.query.three)
 			// playlist[i].push(req.query.three);
-		var tracks = req.plalist.tracks;
+		var tracks = req.playlist.tracks;
 		if(!tracks){
 			tracks = [];
 		}
 		if(req.query.ids){
 			var ids = req.query.ids.split(',');
-			req.plalist.tracks = tracks.concat(findTracks(ids));
+			req.playlist.tracks = tracks.concat(findTracks(ids));
 		}
 		res.send('Dodano nowe piosenki.');
 	})
@@ -137,6 +138,6 @@ app.route('playlist/:id') //:userId/playlist/:id')
 		// req.body.id = req.params.id;
 		// playlist.set(req.params.playlistId, req.body);
 		
-		plalist[req.params.playlistId].public = 'yes';
+		playlist[req.params.playlistId].public = 'yes';
 		res.send('Twoja lista jest teraz publiczna');
 	});
