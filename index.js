@@ -1,13 +1,13 @@
 'use strict';
 //require('newrelic');
-var basicAuth = require('basic-auth-connect');
+//var basicAuth = require('basic-auth-connect');
 var config = require('config');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 var util = require('util');
 var bodyParser = require('body-parser');
 var uuid = require('node-uuid');
-var MongoClient = require('mongodb').MongoClient;
+//var MongoClient = require('mongodb').MongoClient;
 var config = {appRoot: __dirname // required config
 };
 

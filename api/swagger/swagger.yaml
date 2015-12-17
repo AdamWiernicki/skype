@@ -1,13 +1,13 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: MiniSkype
+  title: MiniSpotify
   contact:
-    name: Skype Support
-    url: www.skype.com
+    name: Spotify Support
+    url: www.spotify.com
     email: adamwiernicki1991@gmail.com
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:3000
 # basePath prefixes all resource paths 
 basePath: /
 # 
