@@ -1,4 +1,3 @@
-'use strict';
 //require('newrelic');
 //var basicAuth = require('basic-auth-connect');
 var config = require('config');
@@ -11,7 +10,7 @@ var uuid = require('node-uuid');
 var config = {appRoot: __dirname // required config
 };
 
-tracks = require('./tracks.json');
+var tracks = require('./tracks.json');
 app.use(bodyParser.json());
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
