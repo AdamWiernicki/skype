@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
+  version: "0.0.2"
   title: MiniSpotify
   contact:
     name: Spotify Support
@@ -29,12 +29,12 @@ paths:
       description: Returns 'Hello' to the caller
       # used as the method name of the controller
       operationId: hello
-      #parameters:
-      #  - name: name
-      #    in: query
-      #    description: The name of the person to whom to say hello
-      #    required: false
-      #    type: string
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
       responses:
         "200":
           description: Success
@@ -76,7 +76,51 @@ paths:
         - name: name
           in: query
           description: The name of the called playlist
+          required: false
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Playlist"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /playlist/:id:
+    x-swager-router-controller:
+      hello_world
+    post:
+      description: Adds new playlist of a given name to database
+      operationId: create
+      parameters:
+        - name: name
+          in: query
+          description: The name of the new playlist
           required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      description: display playlist properties and tracks
+      operationId: displayPlaylist
+      parameters:
+        - name: name
+          in: query
+          description: The name of the called playlist
+          required: false
           type: string
       responses:
         200:
